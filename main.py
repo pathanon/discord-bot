@@ -3,9 +3,11 @@ from discord.ext import commands
 from discord import app_commands
 import random
 from myserver import server_on
+import os
 
 bot = commands.Bot(command_prefix='!',intents=discord.Intents.all())
-TOKEN='<TOKEN>'
+# TOKEN='<TOKEN>'
+TOKEN = os.getenv('token')
 food_list = ["ข้าวหมูแดง",
              "ข้าวหมูกรอบ",
              "ข้าวผัดทะเลต้มยำ",
