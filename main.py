@@ -106,7 +106,7 @@ async def listingred(interaction, name:str):
     if name in list(ingred_list.keys()):
         name_ = ingred_list[name]
     else: name_ = ingred_list["unknown"]
-    await interaction.response.send_message(f'ถามว่ามีอะไรบ้าง.... {name_}')
+    await interaction.response.send_message(f'ถามว่าใน {name} มีอะไรบ้าง.... {name_}')
 
 server_on()
 bot.run(TOKEN)
