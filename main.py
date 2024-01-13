@@ -109,15 +109,18 @@ async def listingred(interaction, name:str):
     else: name_ = ingred_list["unknown"]
     await interaction.response.send_message(f'ถามว่าใน {name} มีอะไรบ้าง.... {name_}')
 
-@bot.tree.command(name='dog-cat',description='add an image of anything and it will return dog or cat')
-@app_commands.describe(img='add image')
-async def dogcatimage(interaction, img:Image):
-    embeds = discord.Embed(title="Dog or Cat! - Let Me Guess",
-                           description="It's Dog",
-                           color=0x66FFFF,
-                           timestamp=discord.utils.utcnow(),
-                           set_image=img)
-    await interaction.response.send_message(embed=embeds)
+# @bot.tree.command(name='dog-cat',description='add an image of anything and it will return dog or cat')
+# @app_commands.describe(img='add file path of the image')
+# async def dogcatimage(interaction, img:str):
+#     with open(my_filename,"rb") as fh:
+#         f = discord.File(fh,filename=my_filename)
+    
+#     # embeds = discord.Embed(title="Dog or Cat! - Let Me Guess",
+#     #                        description="It's Dog",
+#     #                        color=0x66FFFF,
+#     #                        timestamp=discord.utils.utcnow(),
+#     #                        set_image=img)
+#     await interaction.send(file=f)
 
 server_on()
 bot.run(TOKEN)
