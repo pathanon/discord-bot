@@ -4,6 +4,7 @@ from discord import app_commands
 import random
 from myserver import server_on
 import os
+from PIL import Image
 
 bot = commands.Bot(command_prefix='!',intents=discord.Intents.all())
 # TOKEN='<TOKEN>'
@@ -89,8 +90,8 @@ async def hello(interaction):
     # await interaction.response.send_message(a)
 
 
-@bot.tree.command(name='list-ingredients')
-@app_commands.describe(name='typing the menu and return list of ingredients')
+@bot.tree.command(name='list-ingredients',description='typing the menu and return list of ingredients')
+@app_commands.describe(name='typing the menu')
 async def listingred(interaction, name:str):
     ingred_list = {
             "ข้าวหมูแดง":"หมูแดง กับ ข้าวเปล่า",
@@ -107,6 +108,16 @@ async def listingred(interaction, name:str):
         name_ = ingred_list[name]
     else: name_ = ingred_list["unknown"]
     await interaction.response.send_message(f'ถามว่าใน {name} มีอะไรบ้าง.... {name_}')
+
+@bot.tree.command(name='dog-cat',description='add an image of anything and it will return dog or cat')
+@app_commands.describe(img='add image')
+async def dogcatimage(interaction, img:Image):
+    embeds = discord.Embed(title="Dog or Cat! - Let Me Guess",
+                           description="It's Dog",
+                           color=0x66FFFF,
+                           timestamp=discord.utils.utcnow(),
+                           set_image=img)
+    await interaction.response.send_message(embed=embeds)
 
 server_on()
 bot.run(TOKEN)
