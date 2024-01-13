@@ -77,6 +77,7 @@ async def helpcommand(interaction):
     embeds.add_field(name="/help",   value="Showing all command(s)",   inline=False)
     embeds.add_field(name="/hello", value="Greetings with bots",    inline=False)
     embeds.add_field(name="/random-food",   value="Bot will randomly pick 1 food for you or may be not!",   inline=False)
+    embeds.add_field(name="/dog-cat", value="add an image of anything and it will return dog or cat",    inline=False)
     embeds.add_field(name="/classify", value="add an image of plant and return classified diseases and treatments",    inline=False)
     embeds.add_field(name="/regconize", value="add an image of plant and return name of plant",    inline=False)
     embeds.add_field(name="/list-ingredients", value="typing the menu and return list of ingredients",    inline=False)
