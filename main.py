@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 import random
+from myserver import server_on
 
 bot = commands.Bot(command_prefix='!',intents=discord.Intents.all())
 TOKEN='<TOKEN>'
@@ -79,4 +80,5 @@ async def helpcommand(interaction):
     # embeds.set_image(url='')
     # embeds.set_footer(url='')
     await interaction.response.send_message(embed=embeds)
+server_on()
 bot.run(TOKEN)
