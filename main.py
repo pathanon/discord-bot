@@ -76,6 +76,7 @@ async def helpcommand(interaction):
                            timestamp=discord.utils.utcnow())
     embeds.add_field(name="/hello", value="Greetings with bots",    inline=False)
     embeds.add_field(name="/random-food",   value="Bot will randomly pick 1 food for you or may be not!",   inline=False)
+    embeds.add_field(name="/help",   value="Showing all command(s)",   inline=False)
 
     # embeds.set_author(name='Author',url="",icon_url="")
     # embeds.set_thumbnail(url='')
