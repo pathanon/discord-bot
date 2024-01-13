@@ -57,17 +57,6 @@ async def on_message(message):
 # @bot.command()
 # async def test(ctx,arg):
 #     await ctx.send(arg)
-
-@bot.tree.command(name='hello',description='Replies with Hello')
-async def hello(interaction):
-    await interaction.response.send_message('Hello World!')
-
-@bot.tree.command(name='random-food',description='Randomly pick me some food menu!')
-async def hello(interaction):
-    random_menu = random.choice(food_list)
-    await interaction.response.send_message(f'กินอะไรดีอ่ะนะ...งั้นลอง {random_menu}')
-    # await interaction.response.send_message(a)
-
 @bot.tree.command(name='help',description='Bot Commands')
 async def helpcommand(interaction):
     embeds = discord.Embed(title="Help Me! - Bot Commands",
@@ -88,5 +77,36 @@ async def helpcommand(interaction):
     # embeds.set_image(url='')
     # embeds.set_footer(url='')
     await interaction.response.send_message(embed=embeds)
+
+@bot.tree.command(name='hello',description='Replies with Hello')
+async def hello(interaction):
+    await interaction.response.send_message('Hello World!')
+
+@bot.tree.command(name='random-food',description='Randomly pick me some food menu!')
+async def hello(interaction):
+    random_menu = random.choice(food_list)
+    await interaction.response.send_message(f'กินอะไรดีอ่ะนะ...งั้นลอง {random_menu}')
+    # await interaction.response.send_message(a)
+
+
+@bot.tree.command(name='list-ingredients')
+@app_commands.describe(name='typing the menu and return list of ingredients')
+async def listingred(interaction, name:str):
+    ingred_list = {
+            "ข้าวหมูแดง":"หมูแดง กับ ข้าวเปล่า",
+             "ข้าวหมูกรอบ":"มีแต่น้ำมัน",
+             "ข้าวผัดทะเลต้มยำ":"ข้าว กับ ทะเล",
+             "ห่อหมก":"ใบตอง กับ ปลา",
+             "ข้าวกระเพราหมูสับไข่ดาว":"มีแต่ถัวฝักยาวหมูไม่เห็นมีเลย",
+             "ก๋วยเตี๋ยวหมูตุ๋น":"แป้ง และ วิญญาณหมู",
+             "หอยทอด":"หอย และ น้ำมัน",
+             "ผัดไท":"อร่อยไม่ซ้ำจำสูตรไม่ได้",
+             "unknown":"สั่งยากชิบหาย...ลองไป Google มั้ย"
+    }
+    if name in ingred_list.key():
+        name_ = name.copy()
+    else: name_ = "unknown"
+    await interaction.response.send_message(f'ถามว่ามีอะไรบ้าง.... {ingred_list[name_]}')
+
 server_on()
 bot.run(TOKEN)
