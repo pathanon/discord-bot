@@ -103,10 +103,10 @@ async def listingred(interaction, name:str):
              "ผัดไท":"อร่อยไม่ซ้ำจำสูตรไม่ได้",
              "unknown":"สั่งยากชิบหาย...ลองไป Google มั้ย"
     }
-    if name in ingred_list.key():
-        name_ = name.copy()
-    else: name_ = "unknown"
-    await interaction.response.send_message(f'ถามว่ามีอะไรบ้าง.... {ingred_list[name_]}')
+    if name in list(ingred_list.keys()):
+        name_ = ingred_list[name_]
+    else: name_ = ingred_list["unknown"]
+    await interaction.response.send_message(f'ถามว่ามีอะไรบ้าง.... {name_}')
 
 server_on()
 bot.run(TOKEN)
