@@ -104,7 +104,7 @@ async def listingred(interaction, name:str):
              "unknown":"สั่งยากชิบหาย...ลองไป Google มั้ย"
     }
     if name in list(ingred_list.keys()):
-        name_ = ingred_list[name_]
+        name_ = ingred_list[name]
     else: name_ = ingred_list["unknown"]
     await interaction.response.send_message(f'ถามว่ามีอะไรบ้าง.... {name_}')
 
