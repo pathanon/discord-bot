@@ -141,7 +141,7 @@ async def hello(interaction):
 async def randfood(interaction):
     random_menu = random.choice(food_list)
     await interaction.response.send_message(f'ทำอะไรกินดี...งั้นลอง {random_menu} ไหมครับ')
-    await interaction.response.send_message(f'{get_info_byname(random_menu)}')
+    await interaction.response.send_message(get_info_byname(random_menu))
     # await interaction.response.send_message(a)
 
 
