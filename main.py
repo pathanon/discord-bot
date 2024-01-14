@@ -160,7 +160,16 @@ async def randfood(interaction):
 @bot.tree.command(name='how-to-cook',description='typing the menu and return instructions')
 @app_commands.describe(name='typing the menu')
 async def listingred(interaction, name:str):
-    await interaction.response.send_message(get_info_byname(name))
+    idx_ = get_menu_index(name_=name)
+    info = get_menu_info(idx_)
+    inst = get_info_byname(name)
+    embeds = discord.Embed(title=f"How-to-Cook! - {name}",
+                           description="",
+                           color=0x65FFFF,
+                           timestamp=discord.utils.utcnow())
+    embeds.add_field(name=name,   value=inst,   inline=False)
+    embeds.set_image(url=info["img_url"])
+    await interaction.response.send_message(embed=embeds)
 
 # @bot.tree.command(name='dog-cat',description='add an image of anything and it will return dog or cat')
 # @app_commands.describe(img='add file path of the image')
