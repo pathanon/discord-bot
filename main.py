@@ -138,7 +138,7 @@ async def hello(interaction):
     await interaction.response.send_message('Hello World!')
 
 @bot.tree.command(name='random-food',description='Randomly pick me some food menu!')
-async def hello(interaction):
+async def randfood(interaction):
     random_menu = random.choice(food_list)
     await interaction.response.send_message(f'ทำอะไรกินดี...งั้นลอง {random_menu} ไหมครับ')
     await interaction.response.send_message(f'{get_info_byname(random_menu)}')
@@ -148,7 +148,7 @@ async def hello(interaction):
 @bot.tree.command(name='how-to-cook',description='typing the menu and return instructions')
 @app_commands.describe(name='typing the menu')
 async def listingred(interaction, name:str):
-    await interaction.response.send_message(f'{get_info_byname(name)}')
+    await interaction.response.send_message(get_info_byname(name))
 
 # @bot.tree.command(name='dog-cat',description='add an image of anything and it will return dog or cat')
 # @app_commands.describe(img='add file path of the image')
