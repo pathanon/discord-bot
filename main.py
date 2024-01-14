@@ -152,7 +152,7 @@ async def randfood(interaction):
                            color=0x66FFFF,
                            timestamp=discord.utils.utcnow())
     embeds.add_field(name=random_menu,   value=inst,   inline=False)
-    # embeds.set_image(url='')
+    embeds.set_image(url=get_menu_info(get_menu_index(random_menu))["img_url"])
     await interaction.response.send_message(embed=embeds)
     # await interaction.response.send_message()
 
