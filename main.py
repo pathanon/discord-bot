@@ -164,7 +164,7 @@ async def listingred(interaction, name:str):
     info = get_menu_info(idx_)
     inst = get_info_byname(name)
     embeds = discord.Embed(title=f"How-to-Cook! - {name}",
-                           description="",
+                           description="Cook this menu as following",
                            color=0x65FFFF,
                            timestamp=discord.utils.utcnow())
     embeds.add_field(name=name,   value=inst,   inline=False)
