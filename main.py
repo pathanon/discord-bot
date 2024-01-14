@@ -139,9 +139,9 @@ async def hello(interaction):
 
 @bot.tree.command(name='random-food',description='Randomly pick me some food menu!')
 async def randfood(interaction):
-    random_menu = random.choice(food_list)
-    await interaction.response.send_message(f'ทำอะไรกินดี...งั้นลอง {random_menu} ไหมครับ\n'+get_info_byname(random_menu))
-    # await interaction.response.send_message(a)
+    random_menu = random.choice(get_menu_all())
+    await interaction.response.send_message(f'ทำอะไรกินดี...งั้นลอง {random_menu} ไหมครับ\n')
+    await interaction.response.send_message(get_info_byname(random_menu))
 
 
 @bot.tree.command(name='how-to-cook',description='typing the menu and return instructions')
