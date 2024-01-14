@@ -145,7 +145,7 @@ async def hello(interaction):
 @bot.tree.command(name='random-food',description='Randomly pick me some food menu!')
 async def randfood(interaction):
     random_menu = random.choice(get_menu_all())
-    get_menu_info(random_menu.index())
+    # get_menu_info(random_menu.index())
     inst = get_info_byname(random_menu)
     embeds = discord.Embed(title=f"Help Me Pick Food! - {random_menu}",
                            description="",
