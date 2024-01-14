@@ -4,21 +4,75 @@ from discord import app_commands
 import random
 from myserver import server_on
 import os
+
 from PIL import Image
+from bs4 import BeautifulSoup
+import requests
+from io import BytesIO
+
+menu_page = "https://www.unileverfoodsolutions.co.th"
+# url = "https://www.unileverfoodsolutions.co.th/th/recipes/%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%A0%E0%B8%97%E0%B9%80%E0%B8%A1%E0%B8%99%E0%B8%B9_%E0%B8%AD%E0%B8%B2%E0%B8%AB%E0%B8%B2%E0%B8%A3%E0%B9%84%E0%B8%97%E0%B8%A2.html"
+menu_url = "https://www.unileverfoodsolutions.co.th/th/recipes/%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%A0%E0%B8%97%E0%B9%80%E0%B8%A1%E0%B8%99%E0%B8%B9_%E0%B8%AD%E0%B8%B2%E0%B8%AB%E0%B8%B2%E0%B8%A3%E0%B9%84%E0%B8%97%E0%B8%A2.html?start=13"
+menu_response = requests.get(menu_url)
+menu_page_html = BeautifulSoup(menu_response.text,'html.parser')
+menu_name_all = menu_page_html.find_all('span',class_='item-list__title')
+menu_url_all = menu_page_html.find_all('div',class_="item-list__body span-3")
+
+def get_menu_info(idx):
+    name_ = menu_name_all[idx]
+    url_ = menu_url_all[idx]
+    inst_url = menu_page+url_.a["href"]
+    # print(f"ชื่อเมนู : {name_}\n เว็บสูตรอาหาร {inst_url} \n")
+    response_inst = requests.get(inst_url)
+    inst_html = BeautifulSoup(response_inst.text,'html.parser')
+    img_name = inst_html.find('figure',class_="recipe-image-v2 js-recipe-image-v2")
+    if img_name==None:
+        img_name = inst_html.find('picture')
+        img_name = menu_page+img_name.img["src"]
+    else:
+        img_name = img_name.img["src"]
+    instructions_ = inst_html.find('ol',class_="instructions")
+    inst_list = [inst.text for inst in instructions_.li.ul.find_all('li')]
+    # print("\nเว็บรุปภาพ\n",img_name)
+    # print("\nสูตรอาหาร\n")
+    # print(inst_list)
+    finale = {"name":name_.text,
+              "inst_url":inst_url,
+              "img_url":img_name,
+              "inst_list":inst_list}
+    return finale
+
+def generate_text_bot(info_):
+    name = info_["name"]
+    # inst_url = info_["inst_url"]
+    img_url = info_["img_url"]
+    inst = info_["inst_list"]
+    name_format = f"ชื่อเมนู : {name}\n" 
+    # name_format = f"เว็บสูตรอาหาร : {inst_url}"
+    # name_format = f"เว็บรุปภาพ : {img_url}"
+    inst_format = "สูตรอาหาร"
+    for idx,cont in enumerate(inst):
+        inst_format+=f"\n{idx+1}. {cont}"
+    # print(inst_format)
+    return name_format+inst_format
+
+def get_menu_all():
+    return [menu_name.text for menu_name in menu_name_all]
+
+def get_info_byname(name_):
+    all_listed = get_menu_all()
+    if name_ in all_listed:
+        test_index = all_listed.index(name_)
+        output_string = generate_text_bot(get_menu_info(test_index))
+    else:
+        output_string = "เมนูนี้ไม่อยู่ในคลังขอโทษด้วยครับผม"
+    return output_string
 
 bot = commands.Bot(command_prefix='!',intents=discord.Intents.all())
 # TOKEN='<TOKEN>'
 TOKEN = os.getenv('token')
-food_list = ["ข้าวหมูแดง",
-             "ข้าวหมูกรอบ",
-             "ข้าวผัดทะเลต้มยำ",
-             "ห่อหมก",
-             "ข้าวกระเพราหมูสับไข่ดาว",
-             "ก๋วยเตี๋ยวหมูตุ๋น",
-             "หอยทอด",
-             "อะไรก็ได้โตแล้ว",
-             "ไม่ต้องแดกสิ...ไอ่สัสแค่นี้ยังต้องให้กูคิด",
-             "ผัดไท"]
+food_list = get_menu_all()
+
 @bot.event
 async def on_ready():
     print("Bot Online!")
@@ -67,7 +121,7 @@ async def helpcommand(interaction):
     embeds.add_field(name="/help",   value="Showing all command(s)",   inline=False)
     embeds.add_field(name="/hello", value="Greetings with bots",    inline=False)
     embeds.add_field(name="/random-food",   value="Bot will randomly pick 1 food for you or may be not!",   inline=False)
-    embeds.add_field(name="/list-ingredients", value="typing the menu and return list of ingredients",    inline=False)
+    embeds.add_field(name="/how-to-cook", value="typing the menu and return instructions",    inline=False)
     embeds.add_field(name="/dog-cat", value="add an image of anything and it will return dog or cat",    inline=False)
     embeds.add_field(name="/classify", value="add an image of plant and return classified diseases and treatments",    inline=False)
     embeds.add_field(name="/regconize", value="add an image of plant and return name of plant",    inline=False)
@@ -86,28 +140,15 @@ async def hello(interaction):
 @bot.tree.command(name='random-food',description='Randomly pick me some food menu!')
 async def hello(interaction):
     random_menu = random.choice(food_list)
-    await interaction.response.send_message(f'กินอะไรดีอ่ะนะ...งั้นลอง {random_menu}')
+    await interaction.response.send_message(f'ทำอะไรกินดี...งั้นลอง {random_menu} ไหมครับ')
+    await interaction.response.send_message(f'{get_info_byname(random_menu)}')
     # await interaction.response.send_message(a)
 
 
-@bot.tree.command(name='list-ingredients',description='typing the menu and return list of ingredients')
+@bot.tree.command(name='how-to-cook',description='typing the menu and return instructions')
 @app_commands.describe(name='typing the menu')
 async def listingred(interaction, name:str):
-    ingred_list = {
-            "ข้าวหมูแดง":"หมูแดง กับ ข้าวเปล่า",
-             "ข้าวหมูกรอบ":"มีแต่น้ำมัน",
-             "ข้าวผัดทะเลต้มยำ":"ข้าว กับ ทะเล",
-             "ห่อหมก":"ใบตอง กับ ปลา",
-             "ข้าวกระเพราหมูสับไข่ดาว":"มีแต่ถัวฝักยาวหมูไม่เห็นมีเลย",
-             "ก๋วยเตี๋ยวหมูตุ๋น":"แป้ง และ วิญญาณหมู",
-             "หอยทอด":"หอย และ น้ำมัน",
-             "ผัดไท":"อร่อยไม่ซ้ำจำสูตรไม่ได้",
-             "unknown":"สั่งยากชิบหาย...ลองไป Google มั้ย"
-    }
-    if name in list(ingred_list.keys()):
-        name_ = ingred_list[name]
-    else: name_ = ingred_list["unknown"]
-    await interaction.response.send_message(f'ถามว่าใน {name} มีอะไรบ้าง.... {name_}')
+    await interaction.response.send_message(f'{get_info_byname(name)}')
 
 # @bot.tree.command(name='dog-cat',description='add an image of anything and it will return dog or cat')
 # @app_commands.describe(img='add file path of the image')
