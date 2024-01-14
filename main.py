@@ -59,6 +59,11 @@ def generate_text_bot(info_):
 def get_menu_all():
     return [menu_name.text for menu_name in menu_name_all]
 
+def get_menu_index(name_):
+    all_listed = get_menu_all()
+    if name_ in all_listed: return all_listed.index(name_)
+    else: return None
+
 def get_info_byname(name_):
     all_listed = get_menu_all()
     if name_ in all_listed:
@@ -71,7 +76,7 @@ def get_info_byname(name_):
 bot = commands.Bot(command_prefix='!',intents=discord.Intents.all())
 # TOKEN='<TOKEN>'
 TOKEN = os.getenv('token')
-food_list = get_menu_all()
+# food_list = get_menu_all()
 
 @bot.event
 async def on_ready():
@@ -140,8 +145,15 @@ async def hello(interaction):
 @bot.tree.command(name='random-food',description='Randomly pick me some food menu!')
 async def randfood(interaction):
     random_menu = random.choice(get_menu_all())
+    get_menu_info(random_menu.index())
     inst = get_info_byname(random_menu)
-    await interaction.response.send_message(f'ทำอะไรกินดี...งั้นลอง {random_menu} ไหมครับ\n ทำแบบนี้ {inst}')
+    embeds = discord.Embed(title=f"Help Me Pick Food! - {random_menu}",
+                           description="",
+                           color=0x66FFFF,
+                           timestamp=discord.utils.utcnow())
+    embeds.add_field(name=random_menu,   value=inst,   inline=False)
+    # embeds.set_image(url='')
+    await interaction.response.send_message(embed=embeds)
     # await interaction.response.send_message()
 
 
