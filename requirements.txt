@@ -3,3 +3,4 @@ discord
 flask
 Pillow
 beautifulsoup4
+requests
